@@ -1,15 +1,13 @@
 const express= require('express');
 // require('dotenv').config();
 const mysql=require('mysql2');
+const cors=require('cors')
 
 let app=express();
-
+app.use(cors())
 app.use(express.json());
 
-app.listen(3000,()=>{
-    console.log(`server started on 3000`);
-    
-})
+
 let db=mysql.createConnection({
     host:'localhost',
     user:'root',
@@ -28,7 +26,7 @@ db.connect((error)=>{
 
 app.post('/',(req,res)=>{
     let {title}= req.body;
-    let sql='insert into todos(title) values(?)';
+    let sql='insert into todo(title) values(?)';
     db.query(sql,[title],(err,result)=>{
         if(err){
             console.log('something went worng');
@@ -46,7 +44,7 @@ app.post('/',(req,res)=>{
 
 app.get('/', (req, res) => {
     
-    let sql = 'SELECT * FROM todos';
+    let sql = 'SELECT * FROM todo';
     db.query(sql, (err, result) => {
         if (err) {
             return res.status(500).json({
@@ -60,12 +58,12 @@ app.get('/', (req, res) => {
 
 
 
-app.put('/satyam/:id', (req, res) => {
+app.put('/:id', (req, res) => {
     const { id } = req.params;
     const { title,completed } = req.body;
 
     const sql = `
-        UPDATE todos
+        UPDATE todo
         SET title = ?, completed = ?
         WHERE id = ?
     `;
@@ -87,10 +85,10 @@ app.put('/satyam/:id', (req, res) => {
 });
 
 
-app.delete('/satyam/:id', (req, res) => {
+app.delete('/:id', (req, res) => {
     const { id } = req.params;
 
-    const sql = 'DELETE FROM todos WHERE id = ?';
+    const sql = 'DELETE FROM todo WHERE id = ?';
 
     db.query(sql, [id], (err, result) => {
         if (err) {
@@ -110,3 +108,7 @@ app.delete('/satyam/:id', (req, res) => {
 });
 
 
+app.listen(3000,()=>{
+    console.log(`server started on 3000`);
+    
+})
