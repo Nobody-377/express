@@ -26,7 +26,7 @@ db.connect((error)=>{
 
 app.post('/',(req,res)=>{
     let {title}= req.body;
-    let sql='insert into todo(title) values(?)';
+    let sql='insert into todos(title) values(?)';
     db.query(sql,[title],(err,result)=>{
         if(err){
             console.log('something went worng');
@@ -44,7 +44,7 @@ app.post('/',(req,res)=>{
 
 app.get('/', (req, res) => {
     
-    let sql = 'SELECT * FROM todo';
+    let sql = 'SELECT * FROM todos';
     db.query(sql, (err, result) => {
         if (err) {
             return res.status(500).json({
@@ -63,7 +63,7 @@ app.put('/:id', (req, res) => {
     const { title,completed } = req.body;
 
     const sql = `
-        UPDATE todo
+        UPDATE todos
         SET title = ?, completed = ?
         WHERE id = ?
     `;
@@ -88,7 +88,7 @@ app.put('/:id', (req, res) => {
 app.delete('/:id', (req, res) => {
     const { id } = req.params;
 
-    const sql = 'DELETE FROM todo WHERE id = ?';
+    const sql = 'DELETE FROM todos WHERE id = ?';
 
     db.query(sql, [id], (err, result) => {
         if (err) {
